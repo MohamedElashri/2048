@@ -137,6 +137,43 @@ html, body {
     display: none;
 }
 
+.mode-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mode-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #776e65;
+}
+
+.mode-btn {
+    padding: 8px 16px;
+    border: 2px solid #bbada0;
+    border-radius: var(--border-radius);
+    background: transparent;
+    color: #776e65;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.mode-btn:hover {
+    border-color: #8f7a66;
+    background: rgba(143, 122, 102, 0.1);
+}
+
+.mode-btn.active {
+    background: #8f7a66;
+    border-color: #8f7a66;
+    color: #f9f6f2;
+}
+
 .game-container {
     position: relative;
     background: var(--grid-bg);
@@ -149,9 +186,10 @@ html, body {
 
 .grid-background {
     display: grid;
-    grid-template-columns: repeat(var(--grid-size), var(--cell-size));
-    grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+    grid-template-columns: repeat(var(--grid-size), 1fr);
+    grid-template-rows: repeat(var(--grid-size), 1fr);
     gap: var(--cell-gap);
+    aspect-ratio: 1;
 }
 
 .grid-cell {
@@ -275,10 +313,42 @@ html, body {
     box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.5);
 }
 
+.tile-4096 {
+    background: #3e3933;
+    color: #f9f6f2;
+    font-size: 32px;
+    box-shadow: 0 0 30px 10px rgba(62, 57, 51, 0.6);
+}
+
 .tile-super {
     background: #3c3a32;
     color: #f9f6f2;
     font-size: 26px;
+}
+
+/* 5x5 grid mode (4096) - adjusted tiles */
+.mode-4096 {
+    --cell-gap: 10px;
+}
+
+.mode-4096 .tile {
+    font-size: 32px;
+}
+
+.mode-4096 .tile-128,
+.mode-4096 .tile-256,
+.mode-4096 .tile-512 {
+    font-size: 28px;
+}
+
+.mode-4096 .tile-1024,
+.mode-4096 .tile-2048,
+.mode-4096 .tile-4096 {
+    font-size: 24px;
+}
+
+.mode-4096 .tile-super {
+    font-size: 20px;
 }
 
 .game-message {

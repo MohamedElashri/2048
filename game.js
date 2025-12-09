@@ -3,7 +3,8 @@ class Game2048 {
         this.size = 4;
         this.grid = [];
         this.score = 0;
-        this.bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
+        this.targetTile = 2048; // Default mode
+        this.bestScore = parseInt(localStorage.getItem('bestScore_2048')) || 0;
         this.history = [];
         this.gameOver = false;
         this.won = false;
@@ -21,6 +22,8 @@ class Game2048 {
         this.tryAgainButton = document.getElementById('try-again');
         this.keepPlayingButton = document.getElementById('keep-playing');
         this.gameContainer = document.getElementById('game-container');
+        this.mode2048Btn = document.getElementById('mode-2048');
+        this.mode4096Btn = document.getElementById('mode-4096');
 
         this.init();
     }
@@ -41,6 +44,10 @@ class Game2048 {
         this.keepPlayingButton.addEventListener('click', () => this.continueGame());
         this.undoButton.addEventListener('click', () => this.undo());
         this.undoOverlayButton.addEventListener('click', () => this.undo());
+
+        // Mode toggle
+        this.mode2048Btn.addEventListener('click', () => this.setMode(2048));
+        this.mode4096Btn.addEventListener('click', () => this.setMode(4096));
 
         // Touch controls
         this.setupTouchControls();
@@ -119,6 +126,44 @@ class Game2048 {
         if (direction) {
             e.preventDefault();
             this.move(direction);
+        }
+    }
+
+    setMode(target) {
+        if (this.targetTile === target) return;
+        
+        this.targetTile = target;
+        this.size = target === 4096 ? 5 : 4;
+        
+        // Update button states
+        this.mode2048Btn.classList.toggle('active', target === 2048);
+        this.mode4096Btn.classList.toggle('active', target === 4096);
+        
+        // Update grid size CSS variable
+        document.documentElement.style.setProperty('--grid-size', this.size);
+        
+        // Update game container class for mode-specific styling
+        this.gameContainer.classList.toggle('mode-4096', target === 4096);
+        
+        // Rebuild grid background
+        this.rebuildGridBackground();
+        
+        // Load best score for this mode
+        this.bestScore = parseInt(localStorage.getItem(`bestScore_${target}`)) || 0;
+        this.updateBestScore();
+        
+        // Start new game with new mode
+        this.newGame();
+    }
+
+    rebuildGridBackground() {
+        const gridBg = document.querySelector('.grid-background');
+        gridBg.innerHTML = '';
+        const totalCells = this.size * this.size;
+        for (let i = 0; i < totalCells; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            gridBg.appendChild(cell);
         }
     }
 
@@ -342,7 +387,7 @@ class Game2048 {
     checkWin() {
         for (let row = 0; row < this.size; row++) {
             for (let col = 0; col < this.size; col++) {
-                if (this.grid[row][col] === 2048) {
+                if (this.grid[row][col] === this.targetTile) {
                     return true;
                 }
             }
@@ -393,7 +438,7 @@ class Game2048 {
                 const value = this.grid[row][col];
                 if (value !== 0) {
                     const tile = document.createElement('div');
-                    tile.className = `tile tile-${value > 2048 ? 'super' : value}`;
+                    tile.className = `tile tile-${value > 4096 ? 'super' : value}`;
 
                     // Check if this is a new tile
                     if (newTile && newTile.row === row && newTile.col === col) {
@@ -418,22 +463,16 @@ class Game2048 {
     }
 
     getCellSize() {
-        const style = getComputedStyle(document.documentElement);
-        const cellSizeStr = style.getPropertyValue('--cell-size').trim();
-        
-        // If it's a calc expression, compute it
-        if (cellSizeStr.includes('calc')) {
-            const gridBg = document.querySelector('.grid-cell');
-            if (gridBg) {
-                return gridBg.offsetWidth;
-            }
+        // Get actual cell size from rendered grid cell
+        const gridCell = document.querySelector('.grid-cell');
+        if (gridCell) {
+            return gridCell.offsetWidth;
         }
-        
-        return parseFloat(cellSizeStr) || 100;
+        return 100;
     }
 
     getGap() {
-        const style = getComputedStyle(document.documentElement);
+        const style = getComputedStyle(this.gameContainer);
         return parseFloat(style.getPropertyValue('--cell-gap')) || 12;
     }
 
@@ -449,7 +488,7 @@ class Game2048 {
 
         if (this.score > this.bestScore) {
             this.bestScore = this.score;
-            localStorage.setItem('bestScore', this.bestScore);
+            localStorage.setItem(`bestScore_${this.targetTile}`, this.bestScore);
             this.updateBestScore();
         }
     }
