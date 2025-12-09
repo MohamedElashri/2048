@@ -1,0 +1,493 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --grid-size: 4;
+    --cell-gap: 12px;
+    --cell-size: 100px;
+    --border-radius: 6px;
+    --bg-color: #faf8ef;
+    --text-color: #776e65;
+    --grid-bg: #bbada0;
+    --cell-bg: rgba(238, 228, 218, 0.35);
+    --btn-bg: #8f7a66;
+    --btn-hover: #9f8b77;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+    overflow: hidden;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 64px;
+    font-weight: bold;
+    color: #776e65;
+}
+
+.scores {
+    display: flex;
+    gap: 8px;
+}
+
+.score-box {
+    background: var(--grid-bg);
+    padding: 8px 20px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    min-width: 80px;
+}
+
+.score-label {
+    font-size: 12px;
+    color: #eee4da;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.score-value {
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-new {
+    background: #8f7a66;
+    color: #f9f6f2;
+    flex: 1;
+}
+
+.btn-new:hover {
+    background: #9f8b77;
+}
+
+.btn-undo {
+    background: #edc22e;
+    color: #f9f6f2;
+    flex: 1;
+}
+
+.btn-undo:hover:not(:disabled) {
+    background: #f5d03a;
+}
+
+.btn-undo:disabled {
+    background: #cdc1b4;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.undo-icon {
+    font-size: 20px;
+}
+
+.undo-count {
+    background: rgba(255,255,255,0.3);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.undo-count:empty {
+    display: none;
+}
+
+.game-container {
+    position: relative;
+    background: var(--grid-bg);
+    border-radius: var(--border-radius);
+    padding: var(--cell-gap);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.grid-background {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+    grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+    gap: var(--cell-gap);
+}
+
+.grid-cell {
+    background: var(--cell-bg);
+    border-radius: var(--border-radius);
+}
+
+.tile-container {
+    position: absolute;
+    top: var(--cell-gap);
+    left: var(--cell-gap);
+    right: var(--cell-gap);
+    bottom: var(--cell-gap);
+}
+
+.tile {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border-radius: var(--border-radius);
+    font-size: 45px;
+    font-weight: bold;
+    transition: top 0.12s ease-in-out, left 0.12s ease-in-out;
+    z-index: 10;
+}
+
+.tile-new {
+    animation: appear 0.2s ease-in-out;
+}
+
+.tile-merged {
+    animation: pop 0.2s ease-in-out;
+    z-index: 20;
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Tile colors */
+.tile-2 {
+    background: #eee4da;
+    color: #776e65;
+}
+
+.tile-4 {
+    background: #ede0c8;
+    color: #776e65;
+}
+
+.tile-8 {
+    background: #f2b179;
+    color: #f9f6f2;
+}
+
+.tile-16 {
+    background: #f59563;
+    color: #f9f6f2;
+}
+
+.tile-32 {
+    background: #f67c5f;
+    color: #f9f6f2;
+}
+
+.tile-64 {
+    background: #f65e3b;
+    color: #f9f6f2;
+}
+
+.tile-128 {
+    background: #edcf72;
+    color: #f9f6f2;
+    font-size: 40px;
+}
+
+.tile-256 {
+    background: #edcc61;
+    color: #f9f6f2;
+    font-size: 40px;
+}
+
+.tile-512 {
+    background: #edc850;
+    color: #f9f6f2;
+    font-size: 40px;
+}
+
+.tile-1024 {
+    background: #edc53f;
+    color: #f9f6f2;
+    font-size: 32px;
+}
+
+.tile-2048 {
+    background: #edc22e;
+    color: #f9f6f2;
+    font-size: 32px;
+    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.5);
+}
+
+.tile-super {
+    background: #3c3a32;
+    color: #f9f6f2;
+    font-size: 26px;
+}
+
+.game-message {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(238, 228, 218, 0.85);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    border-radius: var(--border-radius);
+    animation: fadeIn 0.3s ease;
+}
+
+.game-message.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.game-message p {
+    font-size: 48px;
+    font-weight: bold;
+    color: #776e65;
+    margin-bottom: 20px;
+}
+
+.game-message.game-won {
+    background: rgba(237, 194, 46, 0.85);
+}
+
+.game-message.game-won p {
+    color: #f9f6f2;
+}
+
+.message-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.instructions {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #776e65;
+}
+
+.footer {
+    margin-top: auto;
+    padding-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.footer a {
+    color: #8f7a66;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.footer a:hover {
+    color: #edc22e;
+}
+
+/* Score animation */
+.score-addition {
+    position: absolute;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgba(119, 110, 101, 0.9);
+    animation: scoreUp 0.8s ease-in-out forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+@keyframes scoreUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+}
+
+/* Responsive design */
+@media screen and (max-width: 520px) {
+    :root {
+        --cell-size: calc((100vw - 80px) / 4);
+        --cell-gap: 8px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    .title {
+        font-size: 48px;
+    }
+
+    .score-box {
+        padding: 6px 12px;
+        min-width: 60px;
+    }
+
+    .score-label {
+        font-size: 10px;
+    }
+
+    .score-value {
+        font-size: 18px;
+    }
+
+    .btn {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    .tile {
+        font-size: 32px;
+    }
+
+    .tile-128, .tile-256, .tile-512 {
+        font-size: 28px;
+    }
+
+    .tile-1024, .tile-2048 {
+        font-size: 22px;
+    }
+
+    .tile-super {
+        font-size: 18px;
+    }
+
+    .game-message p {
+        font-size: 36px;
+    }
+
+    .instructions {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    :root {
+        --cell-gap: 6px;
+    }
+
+    .title {
+        font-size: 40px;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .tile {
+        font-size: 26px;
+    }
+
+    .tile-128, .tile-256, .tile-512 {
+        font-size: 22px;
+    }
+
+    .tile-1024, .tile-2048 {
+        font-size: 18px;
+    }
+
+    .tile-super {
+        font-size: 14px;
+    }
+}
+
+/* Landscape phone */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    :root {
+        --cell-size: calc((100vh - 120px) / 4);
+        --cell-gap: 6px;
+    }
+
+    .container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 20px;
+        max-width: none;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .title {
+        font-size: 36px;
+    }
+
+    .instructions {
+        display: none;
+    }
+}

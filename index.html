@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>2048 Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">2048</h1>
+            <div class="scores">
+                <div class="score-box">
+                    <div class="score-label">SCORE</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">BEST</div>
+                    <div class="score-value" id="best-score">0</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <button class="btn btn-new" id="new-game">New Game</button>
+            <button class="btn btn-undo" id="undo" disabled>
+                <span class="undo-icon">↶</span> Undo
+                <span class="undo-count" id="undo-count"></span>
+            </button>
+        </div>
+
+        <div class="game-message" id="game-message">
+            <p id="message-text"></p>
+            <div class="message-buttons">
+                <button class="btn btn-new" id="try-again">Try Again</button>
+                <button class="btn btn-undo" id="undo-overlay"><span class="undo-icon">↶</span> Undo</button>
+                <button class="btn btn-undo" id="keep-playing" style="display:none;">Keep Playing</button>
+            </div>
+        </div>
+
+        <div class="game-container" id="game-container">
+            <div class="grid-background">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+            <div class="tile-container" id="tile-container"></div>
+        </div>
+
+        <p class="instructions">
+            <strong>HOW TO PLAY:</strong> Use your <strong>arrow keys</strong> or <strong>swipe</strong> to move the tiles. 
+            Tiles with the same number <strong>merge into one</strong> when they touch. 
+            Add them up to reach <strong>2048!</strong>
+        </p>
+
+        <footer class="footer">
+            <a href="https://melashri.net" target="_blank" rel="noopener">melashri.net</a>
+        </footer>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
